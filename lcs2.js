@@ -5,8 +5,8 @@
 // 最长公共子序列（ Longest Common Subsequence, LCS）， 顾名思义， 是指在所有的子序列中最长的那一个。
 // 子串是要求更严格的一种子序列， 要求在母串中连续地出现。 在上述例子的中， 最长公共子序列为blog（ cnblogs, belong）， 最长公共子串为lo（ cnblogs, belong）。
 
-var stra = "ij,";
-var strb = "ij5";
+var stra = "ijkdfdgdfhjjj";
+var strb = "ij,dfdgdfhjjd";
 
 /** 计算最长公共子序列 */
 /**
@@ -19,9 +19,10 @@ for (var i = 0; i < stra.length + 1; i++) {
         strlength[i][j] = 100;
     }
 }
+
 var lcs = function (a, b, i, j) {
     let ku, ku1, ku2, result;
-    if (i == -1 || j == -1) { // 过界下标
+    if (m == -1 || j == -1) { // 过界下标
         strlength[i + 1][j + 1] = 0;
         return 0;
     } else if (a[i] == b[j]) {
@@ -34,22 +35,26 @@ var lcs = function (a, b, i, j) {
         strlength[i + 1][j + 1] = result;
         return result;
     } else {
-        if (strlength[i][j + 1] == 100) { // 还没有被计算过
-            ku1 = lcs(a, b, i - 1, j)
-        } else {
-            ku1 = strlength[i][j + 1]; // 被计算过
-        }
-
-        if (strlength[i + 1][j] == 100) { // 还没有被计算过
-            ku2 = lcs(a, b, i, j - 1)
-        } else { // 被计算过
-            ku2 = strlength[i + 1][j];
-        }
-
-        let result = Math.max(ku1, ku2);
-        strlength[i + 1][j + 1] = result;
-        return result;
+        strlength[i + 1][j + 1] = 0;
+        return 0;
     }
 }
-var length = lcs(stra, strb, stra.length - 1, strb.length - 1);
-console.log(length);
+for (var m = 0; m < stra.length; m++) {
+    for (var n = 0; n < strb.length; n++) {
+        lcs(stra, strb, m, n);
+    }
+}
+var max = 0;
+var position = ""
+for (var m = 0; m < stra.length + 1; m++) {
+    for (var n = 0; n < strb.length + 1; n++) {
+        if (strlength[m][n] != 100) {
+            if (strlength[m][n] > max) {
+                max = strlength[m][n];
+                position = "m=" + m.toString() + "  n=" + n.toString();
+            }
+        }
+    }
+}
+console.log(max);
+console.log(position);
