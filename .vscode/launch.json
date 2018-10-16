@@ -7,6 +7,12 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "hoff",
+            "program": "${workspaceFolder}/hoff.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "hoffman",
             "program": "${workspaceFolder}/hoffman.js"
         },
