@@ -1,4 +1,4 @@
-class dataview {
+class DataProcess {
     constructor() {
         //** 读写器 */
         this.dataview = null;
@@ -117,3 +117,4 @@ class dataview {
         this.bitLocation++;
     }
 }
+module.export = DataProcess

@@ -1,3 +1,126 @@
+class DataProcess {
+    constructor() {
+        //** 读写器 */
+        this.dataview = null;
+        /**  字位长度 */
+        this.bitLength = null;
+        /** 字节长度*/
+        this.byteLength = null;
+        this.int = -1;
+        /** 当前字位的位置 */
+        this.bitLocation = 0;
+        /** 当前字节的位置 */
+        this.byteLocation = 0;
+        /** 字位在字节中的位置 */
+        this.bitpos = 0;
+    }
+
+    getCurrentInt() {
+
+        return this.int;
+    }
+
+    getbit() {
+        if (this.int == -1) {
+            this.int = this.dataview.getInt8(this.byteLocation);
+            this.byteLocation++;
+        }
+        var unit8 = this.int;
+        var d;
+        switch (this.bitpos) {
+            case 0:
+                {
+                    d = unit8 >> 7 & 0x1;
+                    this.bitpos++;
+                    break;
+                }
+            case 1:
+                {
+                    d = unit8 >> 6 & 0x1;
+                    this.bitpos++;
+                    break;
+                }
+            case 2:
+                {
+                    d = unit8 >> 5 & 0x1;
+                    this.bitpos++;
+                    break;
+                }
+            case 3:
+                {
+                    d = unit8 >> 4 & 0x1;
+                    this.bitpos++;
+                    break;
+                }
+            case 4:
+                {
+                    d = unit8 >> 3 & 0x1;
+                    this.bitpos++;
+                    break;
+                }
+            case 5:
+                {
+                    d = unit8 >> 2 & 0x1;
+                    this.bitpos++;
+                    break;
+                }
+            case 6:
+                {
+                    d = unit8 >> 1 & 0x1;
+                    this.bitpos++;
+                    break;
+                }
+            case 7:
+                {
+                    d = unit8 & 0x1;
+                    this.bitpos = 0;
+                    this.int = -1;
+                    break;
+                }
+        }
+        this.bitLocation++;
+        return d;
+    }
+
+    // d 只存 0 或 1
+    setbit(d) {
+        if (this.int == -1) {
+            //初始化
+            this.int = 0;
+            this.dataview.setInt8(this.byteLocation, this.int);
+            this.byteLength++;
+        }
+        switch (this.bitpos) {
+            case 0:
+                {
+                    this.int = this.int | d;
+                    this.dataview.setInt8(this.byteLocation, this.int);
+                    this.bitpos++;
+                    break;
+                }
+            case 7:
+                {
+                    this.int = this.int << 1 | d;
+                    this.dataview.setInt8(this.byteLocation, this.int);
+                    this.byteLocation++;
+                    this.bitpos = 0;
+                    this.int = -1;
+                    break;
+                }
+            default:
+                {
+                    this.int = this.int << 1 | d;
+                    this.dataview.setInt8(this.byteLocation, this.int);
+                    this.bitpos++;
+                    break;
+                }
+        }
+        this.bitLocation++;
+    }
+}
+
+
+
 var stra = "gagabafdfjajlagoimldnaglmldfkmawooemxdf";
 var tongji = {};
 var chars = [];
@@ -126,5 +249,29 @@ if (decodeStra == stra) {
     console.log(true);
 }
 
-console.log(code);
-console.log("dd");
+var process = new DataProcess();
+var kk = (listcode.length >> 3) + 1;
+var buffer = new ArrayBuffer(kk);
+var dataview = new DataView(buffer);
+process.dataview = dataview;
+process.bitLength = listcode.length;
+for (var i = 0; i < listcode.length; i++) {
+    var char = listcode[i];
+    if (i == 133) {
+        console.log(i);
+    }
+    process.setbit(parseInt(char));
+}
+
+var dedataview = new DataView(buffer);
+var deProcess = new DataProcess();
+deProcess.dataview = dedataview;
+var des = ""
+for (var i = 0; i < listcode.length; i++) {
+    var d = deProcess.getbit(parseInt(char));
+    des = des + d;
+}
+
+if (des == listcode) {
+    console.log(" 识别正确");
+}
