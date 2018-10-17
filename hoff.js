@@ -40,7 +40,7 @@ class TreeHoff {
 var queue = [];
 
 /** 优先队列排序 */
-var sortQueue = function () {
+var sortQueue = function() {
     queue.sort((a, b) => {
         return b.num - a.num;
     })
@@ -59,7 +59,7 @@ for (var i = 0; i < chars.length; i++) {
 }
 
 /** 数合并 */
-var unionTree = function (t1, t2) {
+var unionTree = function(t1, t2) {
     var tree = new TreeHoff();
     tree.left = t2;
     tree.right = t1;
@@ -82,7 +82,7 @@ var rootTree = queue[0];
 
 var code = {};
 var decode = {};
-var rule = function (tree) {
+var rule = function(tree) {
     if (tree) {
         if (tree.left) {
             tree.left.value = tree.value ? tree.value + "0" : "0";
