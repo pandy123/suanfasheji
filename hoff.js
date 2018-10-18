@@ -93,25 +93,60 @@ class DataProcess {
         switch (this.bitpos) {
             case 0:
                 {
-                    this.int = this.int | d;
+                    this.int = (this.int >> 7 | d) << 7;
+                    this.dataview.setInt8(this.byteLocation, this.int);
+                    this.bitpos++;
+                    break;
+                }
+            case 1:
+                {
+                    this.int = (this.int >> 6 | d) << 6;
+                    this.dataview.setInt8(this.byteLocation, this.int);
+                    this.bitpos++;
+                    break;
+                }
+            case 2:
+                {
+                    this.int = (this.int >> 5 | d) << 5;
+                    this.dataview.setInt8(this.byteLocation, this.int);
+                    this.bitpos++;
+                    break;
+                }
+            case 3:
+                {
+                    this.int = (this.int >> 4 | d) << 4;
+                    this.dataview.setInt8(this.byteLocation, this.int);
+                    this.bitpos++;
+                    break;
+                }
+            case 4:
+                {
+                    this.int = (this.int >> 3 | d) << 3;
+                    this.dataview.setInt8(this.byteLocation, this.int);
+                    this.bitpos++;
+                    break;
+                }
+            case 5:
+                {
+                    this.int = (this.int >> 2 | d) << 2;
+                    this.dataview.setInt8(this.byteLocation, this.int);
+                    this.bitpos++;
+                    break;
+                }
+            case 6:
+                {
+                    this.int = (this.int >> 1 | d) << 1;
                     this.dataview.setInt8(this.byteLocation, this.int);
                     this.bitpos++;
                     break;
                 }
             case 7:
                 {
-                    this.int = this.int << 1 | d;
+                    this.int = this.int | d;
                     this.dataview.setInt8(this.byteLocation, this.int);
                     this.byteLocation++;
                     this.bitpos = 0;
                     this.int = -1;
-                    break;
-                }
-            default:
-                {
-                    this.int = this.int << 1 | d;
-                    this.dataview.setInt8(this.byteLocation, this.int);
-                    this.bitpos++;
                     break;
                 }
         }
