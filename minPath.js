@@ -82,7 +82,7 @@ do {
 
     }
     currentV = minV;
-    weigthSum = min + weigthSum;
+    weigthSum = resultList[minV.name].weight;
     pathList.push(minV);
 } while (pathList[pathList.length - 1] != v7)
 
