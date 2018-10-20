@@ -19,8 +19,8 @@
       {
          "type": "node",
          "request": "launch",
-         "name": "hoffman",
-         "program": "${workspaceFolder}/hoffman.js"
+         "name": "minPath",
+         "program": "${workspaceFolder}/minPath.js"
       },
       {
          "type": "node",
