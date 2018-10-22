@@ -10,17 +10,21 @@ class result {
     constructor(name) {
         this.name = name;
         this.weight = 10000;
-        this.paths = [];
+        this.lastPath = null;
     }
 }
 
 var map = {};
 var resultList = {};
+var resultArray = [];
 for (var i = 1; i < 8; i++) {
     var name = "v" + i;
     map[name] = new vertex(name);
-    resultList[name] = new result(name);
+    var result = new result(name);
+    resultList[name] = result;
+    resultArray.push(result);
 }
+resultList["v1"].weight = 0;
 
 var v1 = map["v1"];
 var v2 = map["v2"];
@@ -50,40 +54,43 @@ v6.vertexs = [v7];
 v6.weights = [50];
 /** 贪心 v1 -- v7 的距离 */
 
+// 搜索路径是用当前节点下探的（V1-Vn最小权重进行）,探索路径中包含了所有路径后结束循环
+// 每个节点的最小权重是，上一个节点的最小权重加上当前权重
+// 每个节点的最小路径是，上一个节点的最小路径加上当前路径
 
-var pathList = []
+var pathList = [];
 var currentV = v1;
-pathList.push(currentV);
-weigthSum = 0;
+// 搜索路径
+pathList.push(v1);
 
-var copyPaths = function(paths) {
-        var result = [];
-        paths.forEach(element => {
-            result.push(element);
-        });
-        return result;
+var findNextPath = function() {
+    //找一个权重最小值, 作为新的搜索起始点
+    currentV = null;
+    resultArray.sort((a, b) => {
+        return a.weight - b.weight;
+    })
+    for (var i = 0; i < resultArray.length; i++) {
+        if (pathList.indexOf(resultArray[i]) < 0) {
+            currentV = resultArray[i];
+            pathList.push(resultArray[i]);
+        }
     }
-    /** 用最短的路径*/
+}
+
+/** 用最短的路径*/
 do {
-    var minV = currentV.vertexs[0];
-    var min = currentV.weights[0]
+    var currentWeigth = resultList[currentV.name].weight;
     for (var i = 0; i < currentV.vertexs.length; i++) {
         var name = currentV.vertexs[i].name;
         var weight = currentV.weights[i];
         /** 之前路径的权重和 */
-        if (weight + weigthSum < resultList[name].weight) {
-            resultList[name].weight = weight + weigthSum;
-            resultList[name].paths = copyPaths(pathList);
+        if (weight + currentWeigth < resultList[name].weight) {
+            // 最小权重和最小权重路径
+            resultList[name].weight = weight + currentWeigth;
+            resultList[name].lastPath = currentV;
         }
-        if (weight < min) {
-            min = weight;
-            minV = currentV.vertexs[i];
-        }
-
     }
-    currentV = minV;
-    weigthSum = resultList[minV.name].weight;
-    pathList.push(minV);
-} while (pathList[pathList.length - 1] != v7)
+    currentV = findNextPath();
+} while (currentV)
 
 console.log(pathList);
